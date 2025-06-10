@@ -1,8 +1,6 @@
 import java.util.Scanner;
 
 public class calculadoraapp {
-
-    // Usamos un único Scanner para toda la clase
     private static final Scanner CONSOLA = new Scanner(System.in);
 
     public static void main(String[] args) {
@@ -10,15 +8,16 @@ public class calculadoraapp {
 
         while (continuar) {
             mostrarMenu();
+
             int operacion = leerEntero("Escoja opción: ");
 
             switch (operacion) {
                 case 1, 2, 3, 4 -> {
-                    int operando1 = leerEntero("Ingrese valor 1: ");
-                    int operando2 = leerEntero("Ingrese valor 2: ");
+                    double operando1 = leerDouble("Ingrese valor 1: ");
+                    double operando2 = leerDouble("Ingrese valor 2: ");
 
                     try {
-                        int resultado = ejecutarOperacion(operacion, operando1, operando2);
+                        double resultado = ejecutarOperacion(operacion, operando1, operando2);
                         System.out.println("El resultado es: " + resultado);
                     } catch (ArithmeticException e) {
                         System.out.println(e.getMessage());
@@ -31,53 +30,21 @@ public class calculadoraapp {
                 default -> System.out.println("La opción es errónea");
             }
         }
-        CONSOLA.close(); // Cerramos el scanner al terminar
+
+        CONSOLA.close();
     }
-
-    /* ----------  Funciones de dominio ---------- */
-
-    private static int sumar(int a, int b)        { return a + b; }
-    private static int restar(int a, int b)       { return a - b; }
-    private static int multiplicar(int a, int b)  { return a * b; }
-
-    private static int dividir(int a, int b) {
-        if (b == 0) {
-            throw new ArithmeticException("No se puede dividir entre cero.");
-        }
-        return a / b;
-    }
-
-    /**
-     * Ejecuta la operación seleccionada.
-     * @param op 1-suma, 2-resta, 3-multiplicación, 4-división
-     */
-    private static int ejecutarOperacion(int op, int a, int b) {
-        return switch (op) {
-            case 1 -> sumar(a, b);
-            case 2 -> restar(a, b);
-            case 3 -> multiplicar(a, b);
-            case 4 -> dividir(a, b);
-            default -> 0; // No debería ocurrir (caso controlado en el switch principal)
-        };
-    }
-
-    /* ----------  Funciones de interacción ---------- */
 
     private static void mostrarMenu() {
         System.out.println("""
-                **** Aplicación Calculadora ****
-                    1 - Suma
-                    2 - Resta
-                    3 - Multiplicación
-                    4 - División
-                    5 - Salir
-                """);
+            **** Aplicación Calculadora ****
+                1 - Suma
+                2 - Resta
+                3 - Multiplicación
+                4 - División
+                5 - Salir
+            """);
     }
 
-    /**
-     * Lee un entero desde consola mostrando un mensaje al usuario.
-     * Repite la petición si el usuario introduce un valor no numérico.
-     */
     private static int leerEntero(String mensaje) {
         while (true) {
             System.out.print(mensaje);
@@ -87,5 +54,45 @@ public class calculadoraapp {
                 System.out.println("Entrada no válida. Intente nuevamente.");
             }
         }
+    }
+
+    private static double leerDouble(String mensaje) {
+        while (true) {
+            System.out.print(mensaje);
+            try {
+                return Double.parseDouble(CONSOLA.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("Entrada no válida. Intente nuevamente.");
+            }
+        }
+    }
+
+    private static double ejecutarOperacion(int op, double a, double b) {
+        return switch (op) {
+            case 1 -> sumar(a, b);
+            case 2 -> restar(a, b);
+            case 3 -> multiplicar(a, b);
+            case 4 -> dividir(a, b);
+            default -> 0.0;
+        };
+    }
+
+    private static double sumar(double a, double b) {
+        return a + b;
+    }
+
+    private static double restar(double a, double b) {
+        return a - b;
+    }
+
+    private static double multiplicar(double a, double b) {
+        return a * b;
+    }
+
+    private static double dividir(double a, double b) {
+        if (b == 0) {
+            throw new ArithmeticException("No se puede dividir entre cero.");
+        }
+        return a / b;
     }
 }
